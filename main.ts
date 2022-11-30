@@ -19,6 +19,15 @@ const auth = "admin:admin"
   const rawSectors = fs.readFileSync(sectorsPath)
   const sectors = JSON.parse(rawSectors.toString())
 
+  const formattedSectors = sectors.map((sector: any) => (
+    {
+      ...sector,
+      Funds: undefined,
+      GrowthYear: undefined,
+      GrowthMonth: undefined,
+    }
+  ))
+
   const openSearch = new OpenSearch({
     auth: auth,
     host: host,
@@ -34,9 +43,7 @@ const auth = "admin:admin"
 
   console.log('Adding all sectors to index...')
 
-  await openSearch.addDocument('sectors', sectors[0])
-
-  // await openSearch.bulkCreateAtIndex('sectors', sectors)
+  await openSearch.bulkCreateAtIndex('sectors', formattedSectors)
 
   console.log('Finished adding all sectors to index...')
 })()

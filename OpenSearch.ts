@@ -37,9 +37,12 @@ export class OpenSearch {
   }
 
   async bulkCreateAtIndex(index: string, documents: any[]) {
-    return await this.client.bulk({
-      index: index,
-      body: documents,
+    return await this.client.helpers.bulk({
+      datasource: documents,
+      onDocument: (document) => ({
+        create: { _index: index },
+      }),
+      refreshOnCompletion: true,
     })
   }
 
